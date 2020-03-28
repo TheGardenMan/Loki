@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create a post</title>
+</head>
+<body>
+
+	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{create_post_form}}
+		<br>
+		<input type="hidden" name="latitude" id="latitude">
+		<input type="hidden" name="longitude" value="blah" id="longitude">
+		<label for="location_checkbox">Add location:</label>
+		<input type="checkbox" id="location_checkbox" onclick="main_get_location()" required>
+		<br>
+		<input type="submit" value="Post!" id="loc_submit">
+	</form>
+	<p id="loc_text" color="red"></p>
+	<script>
+	function verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()
+		{
+			// This func is nec becoz js takes sometime for loading data to input fields.
+			// If loc is not loaded by js to the longitude field yet.
+				if(document.getElementById("longitude").value=="blah")
+				{
+					loc_text.innerHTML = "Accessing location...Please wait.."
+					return false;
+
+				}
+			// if loaded
+				else
+				{
+					loc_text.innerHTML = "Done!"
+					return true;
+				}
+		}
+	function main_get_location() {
+		var checkbox = document.getElementById("location_checkbox");
+		var loc_text=document.getElementById("loc_text");
+		function clearBox()
+		{
+			checkbox.checked=false;
+			document.getElementById("latitude").value="";
+			document.getElementById("longitude").value="";
+		}
+		function getLocation() {
+		  if (navigator.geolocation) 
+		  {
+			navigator.geolocation.getCurrentPosition(savePosition, showError);
+		  }
+		  else 
+		  { 
+			loc_text.innerHTML = "Geolocation is not supported by this browser.You can't post.Use a device or browser which supports geolocation.";
+			clearBox();
+		  }
+		}
+
+		function savePosition(position) {
+			document.getElementById("latitude").value=position.coords.latitude;
+			document.getElementById("longitude").value=position.coords.longitude;
+			checkbox.checked=true;
+		}
+
+		function showError(error) {
+			clearBox();
+		  switch(error.code) {
+			case error.PERMISSION_DENIED:
+			  loc_text.innerHTML = "User denied the request for Geolocation."
+			  break;
+			case error.POSITION_UNAVAILABLE:
+			  loc_text.innerHTML = "Location information is unavailable."
+			  break;
+			case error.TIMEOUT:
+			  loc_text.innerHTML = "The request to get user location timed out."
+			  break;
+			case error.UNKNOWN_ERROR:
+			  loc_text.innerHTML = "An unknown error occurred."
+			  break;
+		  }
+		}
+		getLocation();
+	}
+
+	</script>
+
+
+</body>
+</html>
