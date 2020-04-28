@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Feed</title>
+	<style type="text/css">
+		.floating_refresh {
+		  position: -webkit-sticky;
+		  position: fixed;
+		  bottom: 0;
+		  right: 0;
+		  padding: 5px;
+		  background-color: #cae8ca;
+		  border: 2px solid #4CAF50;
+		}
+	</style>
+</head>
+<body>
+	<script src="/static/js/jquery-3.1.1.min.js"></script>
+	<script src="/static/js/jquery.waypoints.min.js"></script>
+	<script src="/static/js/infinite.min.js"></script>
+		<a href="/refresh/" class="floating_refresh">Refresh!</a>
+		<div class="infinite-container">
+			{% for user_id_and_post_id in user_ids_and_post_ids %}
+				<div class="infinite-item">
+						<img src="/static/feed/{{user_id_and_post_id.0}}/{{user_id_and_post_id.1}}.jpg" alt="feed_image">
+						<br>
+				</div>
+			{% endfor %}
+
+			{% if page_no > 0 %}
+					<a class="infinite-more-link" href="/feed/{{page_no}}">More</a>
+			{% else %}
+					<h1 class="infinite-item">You have reached the end of feed</h1>
+			{% endif %}
+		</div>
+
+
+	<div class="loading" style="display: none;">
+    	Loading...
+	</div>
+
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
+</body>
+</html>

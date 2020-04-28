@@ -25,13 +25,16 @@ LOGIN_URL = '/login/'
 SECRET_KEY = '!87tyzawm(9r+9kpz6!*94u^ey#!f+onqv4b0@ov=rdcrvnhmf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = True #Please see below
+# 		ENCRYPTED COOKIES:EXTERNAL MODULE
+# https://github.com/brightinteractive/django-encrypted-cookie-session
+SESSION_ENGINE = 'encrypted_cookies'
+# ToDo change this during to true  production (assuming we're using HTTPS in production.We should.) ref::# https://github.com/brightinteractive/django-encrypted-cookie-session
+SESSION_COOKIE_SECURE = False
+ENCRYPTED_COOKIE_KEYS = ['GawfJ8vItYYACr6sor9f5XMki-SnN2rZ-uI0ykcainU=']
+ALLOWED_HOSTS = ['192.168.225.56','127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = [
 	'django.contrib.admin',
 	'django.contrib.auth',

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Start seeing feed</title>
+</head>
+	<body>
+		{% if message %}
+			<B style="color: red;">{{message}}</B>
+		{%endif%}
+		<form autocomplete="off" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<p>Location already available</p>
+			<br>
+			<p>Click to start seeing posts!</p>
+			<input type="submit" value="Feed!" id="feed">
+		</form>
+	</body>
+</html>

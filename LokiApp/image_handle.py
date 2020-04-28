@@ -8,7 +8,9 @@ from . import db_handle
 import imagehash 
 from io import BytesIO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-image_storage_folder = os.path.join(BASE_DIR, 'image_storage')
+# image_storage_folder = os.path.join(BASE_DIR, 'image_storage')
+image_storage_folder="D:\\CommonFiles\\nginx\\static\\static\\feed"
+
 
 
 def cropper(image,username):
@@ -68,17 +70,26 @@ def resizer(image,username):
 		return image
 			# print(image.size[0])
 			# All image processing is done above ^
+def folderCreate(user_id):
+	folder_path=''.join([image_storage_folder,"/",user_id,"/"])
+	try:
+		os.makedirs(folder_path)
+	except Exception as e:
+		pass
+	return folder_path
 
 def add_to_db_disk(image,username,longitude,latitude):
 	# temp_bytes=BytesIO()
 	# image.save(temp_bytes,'JPEG',quality=50)
 	isError,user_id,post_id=db_handle.add_post_to_db(username,longitude,latitude)
 	if isError==None:
-		image_path=''.join([image_storage_folder,"\\",str(user_id),"\\",str(post_id),".jpg"])
-		# print(image_path)
+		image_path=folderCreate(user_id)
+		print("path",image_path)
+		image_path=''.join([image_path,str(post_id),".jpg"])
+		print("path2",image_path)
 		image.save(image_path,'JPEG',quality=50)
 		# redis_handle.add_to_redis_feed(hash_of_image,temp_bytes.getvalue())
-		return True,isError
+		return True,None
 	else:
 		print("Error while DB")
 		return False,isError
@@ -101,5 +112,5 @@ def clean_and_store(image_received,username,longitude,latitude):
 	image=image.convert('RGB')
 	status,error= add_to_db_disk(image,username,longitude,latitude)
 	if(error!=None):
-		print("[Fatal]",error)
+		print("[Fatal jack]",error)
 	return status #DND Affects upload_done.html

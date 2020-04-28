@@ -4,7 +4,10 @@
 	<title>Start seeing feed</title>
 </head>
 <body>
-	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()" enctype="multipart/form-data">
+	{% if message %}
+		<B style="color: red;">{{message}}</B>
+	{%endif%}
+	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntolongitudeLatitudeFields()" enctype="multipart/form-data">
 		{% csrf_token %}
 		<br>
 		<input type="hidden" name="latitude" id="latitude">
@@ -16,7 +19,7 @@
 		var loc_text=document.getElementById("loc_text");
 		main_get_location_called=false
 		location_access_denied_reloading_is_necessary=false
-	function verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()
+	function verifyWhetherJSHasLoadedDataIntolongitudeLatitudeFields()
 		{
 			// This func is nec becoz js takes sometime for loading data to input fields.
 			// If loc access is denied
@@ -79,6 +82,7 @@
 			document.getElementById("latitude").value=position.coords.latitude;
 			document.getElementById("longitude").value=position.coords.longitude;
 			console.log("location accessed.Clicking submit");
+			console.log(position.coords.longitude);
 			feed_button.click();
 		}
 

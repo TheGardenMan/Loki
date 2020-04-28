@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Feed</title>
+</head>
+<body>
+	<script src="/static/js/jquery-3.1.1.min.js"></script>
+	<script src="/static/js/jquery.waypoints.min.js"></script>
+	<script src="/static/js/infinite.min.js"></script>
+		<div class="infinite-container">
+			{% for user_id_and_post_id in user_ids_and_post_ids %}
+				<div class="infinite-item">
+						<img src="/static/feed/{{user_id_and_post_id.0}}/{{user_id_and_post_id.1}}.jpg" alt="feed_image">
+						<br>
+				</div>
+			{% endfor %}
+		</div>
+
+		{% if page_no > 0 %}
+				<a class="infinite-more-link" href="/feed/{{page_no}}">More</a>
+		{% else %}
+		<!-- ToDo below thing is not shown -->
+				<h1 class="infinite-item">You have reached the end of feed</h1>
+		{% endif %}
+	<div class="loading" style="display: none;">
+    Loading...
+  </div>
+
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
+</body>
+</html>

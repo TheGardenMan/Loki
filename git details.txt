@@ -1,0 +1,3 @@
+remote url name 'loki'
+to see the remote urls,
+'git remote -v'
