@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Account</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+	button {
+		background-color: #4CAF50;
+		color: white;
+		padding: 14px 20px;
+		margin: 8px 0;
+		border: none;
+		cursor: pointer;
+		width: auto;
+		font-family: "Lucida Console", Courier, monospace;
+
+	}
+
+	button:hover {
+		opacity: 0.8;
+	}
+
+	.container {
+		padding: 16px;
+	}
+	body{
+		font-family: "Lucida Console", Courier, monospace;
+
+	}
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<b style="color: blue;">Hello {{username}}!</b>
+		<br><br><br>
+		<a href="/"><button style="width: 50%;background-color: blue; color: white;">Back to feed</button></a> 
+		<br>
+		<a href="/logout/"><button style="width: 50%;background-color: red; color: white;">Logout</button></a> 
+	</div>
+</body>
+</html>
