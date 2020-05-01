@@ -10,3 +10,6 @@ class RegisterForm(UserCreationForm):
 
 class ImagePostForm(forms.Form):
 	image_to_upload = forms.ImageField()
+	labels = {
+        'image_to_upload': ('Image'),
+    }

@@ -2,15 +2,82 @@
 <html>
 <head>
 	<title>Feed</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style type="text/css">
-		.floating_refresh {
-		  position: -webkit-sticky;
-		  position: fixed;
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			cursor: pointer;
+			width: auto;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+
+		button:hover {
+			opacity: 0.8;
+		}
+
+		.container {
+			padding: 16px;
+		}
+
+
+		.responsive_image {
+			/*disp,margin are for centering*/
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			border-radius: 10px;
+			max-width: 80%;
+			height: auto;
+			padding: 15px 15px 0;
+			background-color: white;
+			box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+			-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+			-webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+		}
+		body{
+			background-color: pink;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+		#loc_text {
+		  position: fixed; /* Sit on top of the page content */
+		  display: none; /* Hidden by default */
+		  top: 0;
 		  bottom: 0;
-		  right: 0;
-		  padding: 5px;
-		  background-color: #cae8ca;
-		  border: 2px solid #4CAF50;
+		  left: 0;
+		  top: 0;
+		  width: auto;
+		  height: auto;
+		  word-wrap: break-all;
+		  background-color: rgba(0,0,0,0.5);
+		  color: white;
+		  font-size: 10vw;
+		}
+
+		#location_refresh_button {
+	  		font-family: "Lucida Sans Unicode";
+	  		border-radius: 30px;
+	  		width: auto;
+	  		position: fixed;
+	  		left: 0;
+	  		bottom: 0;
+	  		font-size: 30px;
+	  		font-weight:900 ;
+	  		background-color: red;
+		}
+		#feed_refresh_button{
+			font-family: "Lucida Sans Unicode";
+			border-radius: 30px;
+			width: auto;
+			position: fixed;
+			right: 0;
+			bottom: 0;
+			font-size: 30px;
+			font-weight:900 ;
+			background-color: green;
 		}
 	</style>
 </head>
@@ -18,37 +85,154 @@
 	<script src="/static/js/jquery-3.1.1.min.js"></script>
 	<script src="/static/js/jquery.waypoints.min.js"></script>
 	<script src="/static/js/infinite.min.js"></script>
-		<a href="/refresh/" class="floating_refresh">Refresh!</a>
+	<a href="/account/"><button style="background-color: lightgreen; color: white;">My Account</button></a> 
+	<br>
+	<a href="/create_post/"><button style="background-color: blue; color: white;">Create post</button></a> 
+
+	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()" >
+			{% csrf_token %}
+			<br>
+			<input type="hidden" name="latitude" id="latitude">
+			<input type="hidden" name="longitude" value="blah" id="longitude">
+			<!-- location btn is here -->
+			<button type="submit" id="location_refresh_button">&#x21bb;</button>
+	</form>
+	<a href="/feed/"> <button id="feed_refresh_button">&#x21bb;</button> </a>
+
+	<h1 id="loc_text" style="display: none;">Allow location access to start seeing posts!</h1>
+
+
+
 		<div class="infinite-container">
 			{% for user_id_and_post_id in user_ids_and_post_ids %}
 				<div class="infinite-item">
-						<img src="/static/feed/{{user_id_and_post_id.0}}/{{user_id_and_post_id.1}}.jpg" alt="feed_image">
+						<img  class="responsive_image" src="/static/feed/{{user_id_and_post_id.0}}/{{user_id_and_post_id.1}}.jpg" alt="feed_image">
 						<br>
+
 				</div>
 			{% endfor %}
 
 			{% if page_no > 0 %}
 					<a class="infinite-more-link" href="/feed/{{page_no}}">More</a>
 			{% else %}
-					<h1 class="infinite-item">You have reached the end of feed</h1>
+					<p class="infinite-item" >Wow! You have watched all posts!</p>
 			{% endif %}
 		</div>
 
 
 	<div class="loading" style="display: none;">
-    	Loading...
+		Loading...
 	</div>
 
   <script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
-    });
+	var infinite = new Waypoint.Infinite({
+	  element: $('.infinite-container')[0],
+	  onBeforePageLoad: function () {
+		$('.loading').show();
+	  },
+	  onAfterPageLoad: function ($items) {
+		$('.loading').hide();
+	  }
+	});
+  </script>
+  <script type="text/javascript">
+		var loc_text=document.getElementById("loc_text");
+		main_get_location_called=false
+		location_access_denied_reloading_is_necessary=false
+	function verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()
+		{
+			// This func is nec becoz js takes sometime for loading data to input fields.
+			// If loc access is denied
+				loc_text.style.display="inline";
+				if(location_access_denied_reloading_is_necessary==true)
+				{
+					// loc_text.style.display="block";
+					loc_text.style.color="red";
+					return false;
+				}
+			// If first time the calling the fucntion
+				if(document.getElementById("longitude").value=="blah" && main_get_location_called==false)
+				{
+					main_get_location_called=true
+					console.log("calling loc")
+					loc_text.innerHTML = "<br><br>	Accessing location...<br>Please wait.."
+					main_get_location()
+					console.log("called loc")
+					return false;
+
+				}
+			// if fucntion is already called ,but since js is slow,we wait for it to load location into input fields.
+				else if(document.getElementById("longitude").value=="blah" && main_get_location_called==true)
+				{
+					loc_text.innerHTML = "Accessing location...Please wait..";
+					console.log("wait for access");
+					return false;
+				}
+			// eveyrthing is done
+				else
+				{
+					console.log(document.getElementById("longitude").value);
+					return true;
+				}
+		}
+	function main_get_location() {
+		function clearBox()
+		{
+			document.getElementById("latitude").value="";
+			document.getElementById("longitude").value="";
+			console.log("clearBox");
+		}
+		function getLocation() {
+		  if (navigator.geolocation) 
+		  {
+			console.log("getting");
+			console.log("getting");
+
+			navigator.geolocation.getCurrentPosition(savePosition, showError);
+		  }
+		  else 
+		  { 
+			loc_text.innerHTML = "Geolocation is not supported by this browser.You can't post.Use a device or browser which supports geolocation.";
+			clearBox();
+		  }
+		}
+
+		function savePosition(position) {
+			console.log("saving");
+			var location_refresh_button=document.getElementById("location_refresh_button");
+			// these two take time
+			document.getElementById("latitude").value=position.coords.latitude;
+			document.getElementById("longitude").value=position.coords.longitude;
+			console.log("location accessed.Clicking submit");
+			console.log(position.coords.longitude);
+			location_refresh_button.click();
+		}
+
+		function showError(error) {
+			// User has to reload the page to give access to location.So resetting fields is not necessary.
+			location_access_denied_reloading_is_necessary=true; //See VerifyWhether....()
+			console.log("error show");
+			switch(error.code) {
+	              case error.PERMISSION_DENIED:
+					  loc_text.innerHTML = "<br><br><br>You have denied location access.Reload the page and allow access.";
+					  console.log(document.getElementById("longitude").value);
+					  console.log(main_get_location_called);
+					  break;
+				  case error.POSITION_UNAVAILABLE:
+					loc_text.innerHTML = "Location unavailable.Turn ON your location and reload."
+					break;
+				  case error.TIMEOUT:
+					loc_text.innerHTML = "Timeout.Reload and try again."
+					break;
+				  case error.UNKNOWN_ERROR:
+					loc_text.innerHTML = "Unknown error occurred.Try after some time."
+					break;
+			  }
+		}
+		getLocation();
+	}
+
+
   </script>
 
 </body>

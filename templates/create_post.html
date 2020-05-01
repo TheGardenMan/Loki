@@ -3,88 +3,194 @@
 <html>
 <head>
 	<title>Create a post</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		input[type=file]{
+			width: auto;
+			padding: 12px 20px;
+			margin: 8px 0;
+			display: inline-block;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+		}
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			cursor: pointer;
+			width: auto;
+			font-family: "Lucida Console", Courier, monospace;
+			
+		}
+
+		button:hover {
+			opacity: 0.8;
+		}
+
+		.container {
+			padding: 16px;
+		}
+		body{
+			background-color: pink;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			cursor: pointer;
+			width: auto;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+		label:first-of-type{
+			display: none;
+		}
+
+
+		.btn {
+		  border: 2px solid gray;
+		  color: gray;
+		  background-color: white;
+		  padding: 8px 20px;
+		  border-radius: 8px;
+		  font-size: 20px;
+		  font-weight: bold;
+		}
+		.image_upload_button {
+		    border: 1px solid #ccc;
+		    display: inline-block;
+		    padding: 6px 12px;
+		    cursor: pointer; 
+		}
+		input[type=file]{
+			display: none;
+		}
+	</style>
 </head>
 <body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()" enctype="multipart/form-data">
+	<h2>Post a photo!</h2>
+	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{create_post_form}}
 		<br>
+	    <label for="id_image_to_upload" class="image_upload_button">Select the image</label>
+	    <label id="file-name"></label>
 		<input type="hidden" name="latitude" id="latitude">
 		<input type="hidden" name="longitude" value="blah" id="longitude">
-		<label for="location_checkbox">Add location:</label>
-		<input type="checkbox" id="location_checkbox" onclick="main_get_location()" required>
 		<br>
-		<input type="submit" value="Post!" id="loc_submit">
+		<button type="submit" id="loc_submit">Post</button>
 	</form>
 	<p id="loc_text" color="red"></p>
-	<script>
-	function verifyWhetherJSHasLoadedDataIntoLongtitudeLatitudeFields()
-		{
-			// This func is nec becoz js takes sometime for loading data to input fields.
-			// If loc is not loaded by js to the longitude field yet.
-				if(document.getElementById("longitude").value=="blah")
-				{
-					loc_text.innerHTML = "Accessing location...Please wait.."
-					return false;
+	<br>
+	<a href="/feed/"><button style=
+		"background-color: blue;">Home</button></a>
+	<script type="text/javascript">
+		$("#id_image_to_upload").change(function(){
+		  $("#file-name").text(this.files[0].name);
+		});
+			var loc_text=document.getElementById("loc_text");
+			main_get_location_called=false
+			location_access_denied_reloading_is_necessary=false
+		function verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()
+			{
+				// This func is nec becoz js takes sometime for loading data to input fields.
+				// If loc access is denied
+					loc_text.style.display="inline";
+					if(location_access_denied_reloading_is_necessary==true)
+					{
+						// loc_text.style.display="block";
+						loc_text.style.color="red";
+						return false;
+					}
+				// If first time the calling the fucntion
+					if(document.getElementById("longitude").value=="blah" && main_get_location_called==false)
+					{
+						main_get_location_called=true
+						console.log("calling loc")
+						loc_text.innerHTML = "<br><br>	Accessing location...<br>Please wait.."
+						main_get_location()
+						console.log("called loc")
+						return false;
 
-				}
-			// if loaded
-				else
-				{
-					loc_text.innerHTML = "Done!"
-					return true;
-				}
-		}
-	function main_get_location() {
-		var checkbox = document.getElementById("location_checkbox");
-		var loc_text=document.getElementById("loc_text");
-		function clearBox()
-		{
-			checkbox.checked=false;
-			document.getElementById("latitude").value="";
-			document.getElementById("longitude").value="";
-		}
-		function getLocation() {
-		  if (navigator.geolocation) 
-		  {
-			navigator.geolocation.getCurrentPosition(savePosition, showError);
-		  }
-		  else 
-		  { 
-			loc_text.innerHTML = "Geolocation is not supported by this browser.You can't post.Use a device or browser which supports geolocation.";
-			clearBox();
-		  }
+					}
+				// if fucntion is already called ,but since js is slow,we wait for it to load location into input fields.
+					else if(document.getElementById("longitude").value=="blah" && main_get_location_called==true)
+					{
+						loc_text.innerHTML = "Accessing location...Please wait..";
+						console.log("wait for access");
+						return false;
+					}
+				// eveyrthing is done
+					else
+					{
+						console.log(document.getElementById("longitude").value);
+						return true;
+					}
+			}
+		function main_get_location() {
+			function clearBox()
+			{
+				document.getElementById("latitude").value="";
+				document.getElementById("longitude").value="";
+				console.log("clearBox");
+			}
+			function getLocation() {
+			  if (navigator.geolocation) 
+			  {
+				console.log("getting");
+				console.log("getting");
+
+				navigator.geolocation.getCurrentPosition(savePosition, showError);
+			  }
+			  else 
+			  { 
+				loc_text.innerHTML = "Geolocation is not supported by this browser.You can't post.Use a device or browser which supports geolocation.";
+				clearBox();
+			  }
+			}
+
+			function savePosition(position) {
+				console.log("saving");
+				var post_button=document.getElementById("loc_submit");
+				// these two take time
+				document.getElementById("latitude").value=position.coords.latitude;
+				document.getElementById("longitude").value=position.coords.longitude;
+				console.log("location accessed.Clicking submit");
+				console.log(position.coords.longitude);
+				post_button.click();
+			}
+
+			function showError(error) {
+				// User has to reload the page to give access to location.So resetting fields is not necessary.
+				location_access_denied_reloading_is_necessary=true; //See VerifyWhether....()
+				console.log("error show");
+						switch(error.code) {
+				              case error.PERMISSION_DENIED:
+								  loc_text.innerHTML = "<br><br><br>You have denied location access.Reload the page and allow access.";
+								  console.log(document.getElementById("longitude").value);
+								  console.log(main_get_location_called);
+								  break;
+							  case error.POSITION_UNAVAILABLE:
+								loc_text.innerHTML = "Location unavailable.Turn ON your location and reload."
+								break;
+							  case error.TIMEOUT:
+								loc_text.innerHTML = "Timeout.Reload and try again."
+								break;
+							  case error.UNKNOWN_ERROR:
+								loc_text.innerHTML = "Unknown error occurred.Try after some time."
+								break;
+				  }
+			}
+			getLocation();
 		}
 
-		function savePosition(position) {
-			document.getElementById("latitude").value=position.coords.latitude;
-			document.getElementById("longitude").value=position.coords.longitude;
-			checkbox.checked=true;
-		}
-
-		function showError(error) {
-			clearBox();
-		  switch(error.code) {
-			case error.PERMISSION_DENIED:
-			  loc_text.innerHTML = "User denied the request for Geolocation."
-			  break;
-			case error.POSITION_UNAVAILABLE:
-			  loc_text.innerHTML = "Location information is unavailable."
-			  break;
-			case error.TIMEOUT:
-			  loc_text.innerHTML = "The request to get user location timed out."
-			  break;
-			case error.UNKNOWN_ERROR:
-			  loc_text.innerHTML = "An unknown error occurred."
-			  break;
-		  }
-		}
-		getLocation();
-	}
 
 	</script>
-
-
 </body>
 </html>

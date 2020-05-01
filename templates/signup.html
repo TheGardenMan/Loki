@@ -1,14 +1,66 @@
-{% if message  %}
-<b style="color: red;">{{message}}</b>
-<br>
-{%endif%}
-{% block title %}Create an Account{% endblock %}
-{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+input[type=text], input[type=password] {
+	width: auto;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
 
-{% block content %}
-    <form method="POST" class="form-group">
-	{% csrf_token %}
-	{{ form|crispy }}
-	<button type="submit">Register</button>
-    </form>
-{% endblock %}
+button {
+	background-color: #4CAF50;
+	color: white;
+	padding: 14px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: auto;
+	font-family: "Lucida Console", Courier, monospace;
+
+}
+
+button:hover {
+	opacity: 0.8;
+}
+
+.container {
+	padding: 16px;
+}
+
+span.helptext{
+	display: none;
+}
+body{
+	background-color: pink;
+	font-family: "Lucida Console", Courier, monospace;
+}
+/*ToDo hide helptext in django itself*/
+
+</style>
+</head>
+<body>
+
+<h2>Signup</h2>
+
+<body>
+
+	{% if message  %}
+	<b style="color: red;" >{{message}}</b>
+	<br>
+	{%endif%}
+	<div class="container">
+			<form method="post">
+				{% csrf_token %}
+				{{form}}
+			    <button type="submit">Signup</button>
+			</form>
+	</div>
+		<p class="message">Already a user? <a href="/login/">Login</a></p>
+
+</body>
+</html>

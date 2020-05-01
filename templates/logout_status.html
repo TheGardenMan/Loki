@@ -2,13 +2,35 @@
 <html>
 <head>
 	<title>Logout</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		body{
+			background-color: pink;
+			color: white;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			cursor: pointer;
+			width: auto;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+	</style>
 </head>
 <body>
+
 	{%if message%}
 		<b>{{message}}</b>
 	{%else%}
 		<b>You are not logged in</b>
 	{%endif%}
+	<br>
+	<a href="/login/"><button>Login again</button></a>
+
 
 </body>
 </html>

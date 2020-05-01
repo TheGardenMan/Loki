@@ -32,7 +32,7 @@ SESSION_ENGINE = 'encrypted_cookies'
 # ToDo change this during to true  production (assuming we're using HTTPS in production.We should.) ref::# https://github.com/brightinteractive/django-encrypted-cookie-session
 SESSION_COOKIE_SECURE = False
 ENCRYPTED_COOKIE_KEYS = ['GawfJ8vItYYACr6sor9f5XMki-SnN2rZ-uI0ykcainU=']
-ALLOWED_HOSTS = ['192.168.225.56','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.225.56','127.0.0.1','[2409:4072:6400:422f:1dbe:7147:3ef7:e2a8]']
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,15 +43,13 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'LokiApp',
-	'crispy_forms',
-
 ]
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
-	# 'django.middleware.csrf.CsrfViewMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',

@@ -1,25 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Start seeing feed</title>
+<style type="text/css">
+	.floating_refresh {
+	  position: -webkit-sticky;
+	  position: fixed;
+	  bottom: 0;
+	  right: 0;
+	  padding: 5px;
+	  background-color: #cae8ca;
+	  border: 2px solid #4CAF50;
+	}
+	button {
+
+		background-color: #4CAF50;
+		color: white;
+		padding: 14px 20px;
+		margin: 8px 0;
+		border: none;
+		cursor: pointer;
+		width: auto;
+		font-family: "Lucida Console", Courier, monospace;
+
+	}
+
+	button:hover {
+		opacity: 0.8;
+	}
+
+	.container {
+		padding: 16px;
+	}
+	body{
+		background-color: pink;
+		font-family: "Lucida Console", Courier, monospace;
+	}
+		</style>
+	</head>
 </head>
 <body>
-	{% if message %}
-		<B style="color: red;">{{message}}</B>
-	{%endif%}
-	<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntolongitudeLatitudeFields()" enctype="multipart/form-data">
-		{% csrf_token %}
+	<div class="container">
+
+		{% if message %}
+			<B style="color: red;font-size:5vw;">{{message}}</B>
+		{%endif%}
+		<br><br><br><br>
+
+		<form autocomplete="off" method="post" onsubmit="return verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()" enctype="multipart/form-data">
+
+			{% csrf_token %}
+			<br>
+			<input type="hidden" name="latitude" id="latitude">
+			<input type="hidden" name="longitude" value="blah" id="longitude">
+			<button type="submit" id="feed"style="background-color: red; width: 50%;color: white;">Feed</button>
+		</form>
+		<p id="loc_text" style="color: black;">Allow location access to start seeing posts!</p>
 		<br>
-		<input type="hidden" name="latitude" id="latitude">
-		<input type="hidden" name="longitude" value="blah" id="longitude">
-		<input type="submit" value="Feed!" id="feed">
-	</form>
-	<p id="loc_text" style="color: lightgreen;">Allow location access to start seeing posts!</p>
+		<a href="/create_post/"><button style="background-color: blue; color: white;">Create post</button></a> 
+		<a href="/account/"><button style="right:0;top: 0; position: fixed; background-color: green; color: white;">My Account</button></a> 
+	</div>
+
+
+
+
 	<script>
 		var loc_text=document.getElementById("loc_text");
 		main_get_location_called=false
 		location_access_denied_reloading_is_necessary=false
-	function verifyWhetherJSHasLoadedDataIntolongitudeLatitudeFields()
+	function verifyWhetherJSHasLoadedDataIntoLongitudeLatitudeFields()
 		{
 			// This func is nec becoz js takes sometime for loading data to input fields.
 			// If loc access is denied
@@ -97,13 +147,13 @@
 				  console.log(main_get_location_called);
 				  break;
 				case error.POSITION_UNAVAILABLE:
-				  loc_text.innerHTML = "Location information is unavailable."
+				  loc_text.innerHTML = "Location unavailable.Turn ON your location and reload"
 				  break;
 				case error.TIMEOUT:
-				  loc_text.innerHTML = "The request to get user location timed out."
+				  loc_text.innerHTML = "Timeout.Reload and try again."
 				  break;
 				case error.UNKNOWN_ERROR:
-				  loc_text.innerHTML = "An unknown error occurred."
+				  loc_text.innerHTML = "Unknown error occurred.Try after some time."
 				  break;
 			  }
 		}

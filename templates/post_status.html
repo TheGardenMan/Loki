@@ -1,20 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{% if status == 1 %}
 		<title>Posted successfully!</title>
 	{% else %}
 		<title>Post failed!</title>
 	{%endif%}
+	<style type="text/css">
+		body{
+			background-color: pink;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+		a{
+			text-decoration: none;
+		} 
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			cursor: pointer;
+			width: auto;
+			font-family: "Lucida Console", Courier, monospace;
+		}
+	</style>
 </head>
 <body>
 	{% if status == 1 %}
-		<p style="color: lightgreen;" >Your post has been posted.!</p>
-		<a href="/feed/" style="color: skyblue;">Click to go to feed!</a>
+		<h2 style="color: black;" >Your post has been posted!</h2>
 	{% else %}
-		<p style="color: red;">Post failed</p>
-		<a href="/create_post/" style="color: red;">Click to try again</a>
-		<a href="/feed/" style="color: red;">Click to feed!</a>
+		<h2 style="color: black;" >Post failed</h2>
+		<a href="/create_post/"><button style="width: 50%;background-color: blue; color: white;">Try again</button></a> 
 	{%endif%}
+		<a href="/feed/"><button style="width: 50%;background-color: blue; color: white;">Back to feed</button></a> 
 </body>
 </html>

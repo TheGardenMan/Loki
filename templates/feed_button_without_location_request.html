@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Start seeing feed</title>
+		<style type="text/css">
+			.floating_refresh {
+			  position: -webkit-sticky;
+			  position: fixed;
+			  bottom: 0;
+			  right: 0;
+			  padding: 5px;
+			  background-color: #cae8ca;
+			  border: 2px solid #4CAF50;
+			}
+		</style>
+	</head>
 </head>
 	<body>
+		<a href="/account/">My account</a>
+		<a href="/refresh/" class="floating_refresh">Refresh!</a>
+		<a href="/create_post/" class="floating_refresh" style="left: 50%;width: 10%;">Create post!</a>
 		{% if message %}
 			<B style="color: red;">{{message}}</B>
 		{%endif%}
