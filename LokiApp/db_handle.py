@@ -1,13 +1,12 @@
 import psycopg2
+import os
 isError=False
 cursor="blah"
+DATABASE_URL = os.environ['DATABASE_URL']
+
 
 try:
-	connection = psycopg2.connect(user = "postgres",
-								  password = "jaxtek",
-								  host = "127.0.0.1",
-								  port = "5432",
-								  database = "postgres")
+	connection = psycopg2.connect(DATABASE_URL,sslmode='require')
 	cursor = connection.cursor()
 
 except (Exception, psycopg2.Error) as error :
