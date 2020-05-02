@@ -8,8 +8,8 @@ from . import db_handle
 import imagehash 
 from io import BytesIO
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# image_storage_folder = os.path.join(BASE_DIR, 'image_storage')
-image_storage_folder="D:\\CommonFiles\\nginx\\static\\static\\feed"
+image_storage_folder = os.path.join(BASE_DIR, 'image_storage')
+# image_storage_folder="D:\\CommonFiles\\nginx\\static\\static\\feed"
 
 
 
