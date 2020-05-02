@@ -1,3 +1,19 @@
+# import psycopg2
+# isError=False
+# cursor="blah"
+
+# try:
+# 	connection = psycopg2.connect(user = "postgres",
+# 								  password = "jaxtek",
+# 								  host = "127.0.0.1",
+# 								  port = "5432",
+# 								  database = "postgres")
+# 	cursor = connection.cursor()
+
+# except (Exception, psycopg2.Error) as error :
+# 	print ("Error while connecting to PostgreSQL", error)
+# 	isError=True
+
 import psycopg2
 import os
 isError=False

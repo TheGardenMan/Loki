@@ -7,12 +7,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 template_loc=BASE_DIR+'/templates'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'image_storage')# Where to save uploaded files.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static')# Where to save uploaded files.
 
 LOGIN_URL = '/login/'
 # Since testing,we're serving static files using django
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'image_storage')
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -80,16 +80,16 @@ AUTHENTICATION_BACKENDS = (
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-		'NAME': 'postgres',
-		'USER': 'postgres',
-		'PASSWORD': 'jaxtek',
-		'HOST': 'localhost',
-		'PORT': '5432',
-	}
-}
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+# 		'NAME': 'postgres',
+# 		'USER': 'postgres',
+# 		'PASSWORD': 'jaxtek',
+# 		'HOST': 'localhost',
+# 		'PORT': '5432',
+# 	}
+# }
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Password validation
