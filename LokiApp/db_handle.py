@@ -1,13 +1,28 @@
+# import psycopg2
+# isError=False
+# cursor="blah"
+
+# try:
+# 	connection = psycopg2.connect(user = "postgres",
+# 								  password = "jaxtek",
+# 								  host = "127.0.0.1",
+# 								  port = "5432",
+# 								  database = "postgres")
+# 	cursor = connection.cursor()
+
+# except (Exception, psycopg2.Error) as error :
+# 	print ("Error while connecting to PostgreSQL", error)
+# 	isError=True
+
 import psycopg2
+import os
 isError=False
 cursor="blah"
+DATABASE_URL = os.environ['DATABASE_URL']
+
 
 try:
-	connection = psycopg2.connect(user = "postgres",
-								  password = "jaxtek",
-								  host = "127.0.0.1",
-								  port = "5432",
-								  database = "postgres")
+	connection = psycopg2.connect(DATABASE_URL,sslmode='require')
 	cursor = connection.cursor()
 
 except (Exception, psycopg2.Error) as error :
@@ -19,13 +34,13 @@ def get_nearby_posts(longitude,latitude,pageNo,user_id=0,post_id=0):
 	offset=int(offset)-1 #If pageNo is 2,we should skip first "10" images.And offset 0 doesn't produce an error
 	offset=offset*10
 	if pageNo==1: #if initial req.. user_id,post_id won't be passed .doesn't matter
-		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,10000) 						order by post_time desc limit 10 offset %s ",(longitude,latitude,offset,))
+		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,100000) 						order by post_time desc limit 10 offset %s ",(longitude,latitude,offset,))
 	else:
 		print(user_id,post_id," up")
 		# cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,10000) and post_time<(select post_time from post_details where user_id=%s and post_id=%s)						order by post_time desc limit 10 offset %s ",(longitude,latitude,user_id,post_id,offset,))
 		# Dont put offset here.Since we select NEXT n posts based on TIMESTAMP,we dont need offset at all.
 		# Unless the page no is 1,offset is useless.
-		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,10000) and post_time<(select post_time from post_details where user_id=%s and post_id=%s)						order by post_time desc limit 10",(longitude,latitude,user_id,post_id,))
+		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,100000) and post_time<(select post_time from post_details where user_id=%s and post_id=%s)						order by post_time desc limit 10",(longitude,latitude,user_id,post_id,))
 
 	x=cursor.fetchall()
 	user_ids_and_post_ids=[]
