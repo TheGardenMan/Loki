@@ -1,5 +1,7 @@
+# Heroku tut.. https://blog.usejournal.com/deploying-django-to-heroku-connecting-heroku-postgres-fcc960d290d1
 import os
 import django_heroku
+import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,9 +11,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'image_storage')# Where to save uploaded fil
 
 LOGIN_URL = '/login/'
 # Since testing,we're serving static files using django
-
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'image_storage')
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'image_storage')
 STATIC_URL = '/static/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -49,6 +50,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'LokiProject.urls'
@@ -78,16 +80,16 @@ AUTHENTICATION_BACKENDS = (
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-# 	'default': {
-# 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-# 		'NAME': 'postgres',
-# 		'USER': 'postgres',
-# 		'PASSWORD': 'jaxtek',
-# 		'HOST': 'localhost',
-# 		'PORT': '5432',
-# 	}
-# }
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'postgres',
+		'USER': 'postgres',
+		'PASSWORD': 'jaxtek',
+		'HOST': 'localhost',
+		'PORT': '5432',
+	}
+}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Password validation
