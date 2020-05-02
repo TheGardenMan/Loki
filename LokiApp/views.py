@@ -65,7 +65,7 @@ def feed(request,page_no=1):
 			list_len=len(user_ids_and_post_ids)
 			print(list_len,"list_len")
 			if(list_len==0):
-				return render("no_posts.html")
+				return render(request,"no_posts.html")
 			elif list_len<10:
 				page_no=0
 			else:
