@@ -11,12 +11,13 @@ from . import image_handle
 from . import db_handle
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 image_storage_folder = os.path.join(BASE_DIR, 'image_storage')
-
+# s
 
 @login_required
 def refresh(request):
 	response=HttpResponseRedirect("/")
 	response.delete_cookie("isLocationAvailable",path="/")
+
 	return response
 
 @login_required
@@ -81,7 +82,7 @@ def feed(request,page_no=1):
 			if isFirstPage:#Which means page_no was 1 initially.So we set cookie
 				print("Storing location flag to cookie..")
 				response=render(request,"feed.html",context)
-				response.set_signed_cookie('isLocationAvailable',value=True,max_age=None,path='/',httponly=True)
+				response.set_cookie('isLocationAvailable',value=True,max_age=None,path='/',httponly=True)
 				return response
 			return render(request,"feed.html",context)
 	else:

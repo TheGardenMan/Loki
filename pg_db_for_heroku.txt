@@ -1,9 +1,10 @@
---postgres must be installed in local--
+---postgres must be installed in local--
 
 After logging into heroku:
 1.Create a db:(it's empty)
 	heroku addons:create heroku-postgresql:hobby-dev --version=12
 You'll get a database url.Eg:DATABASE or HEROKU_POSTGRESQL_NAVY_URL
+
 2.Connect to that db.Before connecting to a db,you need an app.You need an app's name while connecting.Or you can connect inside an app(inside that folder in cmd)
 	heroku pg:psql --app app_name_(eg:like abc_2121)
 You'll see the psql prompt now
@@ -11,7 +12,7 @@ You'll see the psql prompt now
 3.copy the local db to remotte,,pos
 link:https://stackoverflow.com/a/61556432/9217577
 
-`heroku pg:push postgres://<USER_NAME>:<POST_NUMBER>@localhost:<PORT_NUMBER>/<DATABASE _NAME> --app <APP_NAME>`
+`heroku pg:push postgres://<USER_NAME>:<PWD>@localhost:<PORT_NUMBER>/<DATABASE _NAME> --app <APP_NAME>`
 In our case,
 it is:
 	heroku pg:push postgres://postgres:jaxtek@localhost:5432/postgres DATABASE --app morning-eyrie-21896

@@ -19,8 +19,6 @@ import os
 isError=False
 cursor="blah"
 DATABASE_URL = os.environ['DATABASE_URL']
-
-
 try:
 	connection = psycopg2.connect(DATABASE_URL,sslmode='require')
 	cursor = connection.cursor()
@@ -30,16 +28,16 @@ except (Exception, psycopg2.Error) as error :
 	isError=True
 
 def get_nearby_posts(longitude,latitude,pageNo,user_id=0,post_id=0):
+	# Offset is NOT used here.Remove it.
 	offset=pageNo
 	offset=int(offset)-1 #If pageNo is 2,we should skip first "10" images.And offset 0 doesn't produce an error
 	offset=offset*10
 	if pageNo==1: #if initial req.. user_id,post_id won't be passed .doesn't matter
-		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,100000) 						order by post_time desc limit 10 offset %s ",(longitude,latitude,offset,))
+		cursor.execute("select user_id,post_id from post_details where ST_DWithin(post_location,ST_MakePoint(%s,%s)::geography,100000) order by post_time desc limit 10 offset %s ",(longitude,latitude,offset,))
 	else:
 		print(user_id,post_id," up")
 		# cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,10000) and post_time<(select post_time from post_details where user_id=%s and post_id=%s)						order by post_time desc limit 10 offset %s ",(longitude,latitude,user_id,post_id,offset,))
 		# Dont put offset here.Since we select NEXT n posts based on TIMESTAMP,we dont need offset at all.
-		# Unless the page no is 1,offset is useless.
 		cursor.execute("select user_id,post_id from post_details where ST_DWithin					(post_location,ST_MakePoint(%s,%s)::geography,100000) and post_time<(select post_time from post_details where user_id=%s and post_id=%s)						order by post_time desc limit 10",(longitude,latitude,user_id,post_id,))
 
 	x=cursor.fetchall()
@@ -77,7 +75,6 @@ def add_post_to_db(username,longitude,latitude):
 		cursor.execute("insert into post_details(user_id,post_id,post_location,post_time) values(%s,%s,ST_MakePoint(%s,%s),current_timestamp )",(user_id,post_id,longitude,latitude,))
 		connection.commit()
 		return None,user_id,post_id
-		floa
 	except Exception as e:
 		connection.rollback()
 		return e,"no user_id due to error","no post_id due to error"
